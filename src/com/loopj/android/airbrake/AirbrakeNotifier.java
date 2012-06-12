@@ -51,7 +51,7 @@ public class AirbrakeNotifier {
     private static final String LOG_TAG = "AirbrakeNotifier";
 
     // Basic settings
-    private static final String AIRBRAKE_ENDPOINT = "http://airbrakeapp.com/notifier_api/v2/notices";
+    private static final String DEFAULT_AIRBRAKE_ENDPOINT = "http://airbrakeapp.com/notifier_api/v2/notices";
     private static final String AIRBRAKE_API_VERSION = "2.0";
 
     private static final String NOTIFIER_NAME = "Android Airbrake Notifier";
@@ -62,6 +62,12 @@ public class AirbrakeNotifier {
 
     private static final String ENVIRONMENT_PRODUCTION = "production";
     private static final String ENVIRONMENT_DEFAULT = ENVIRONMENT_PRODUCTION;
+
+    // Where to send notifications (in case you have a custom server)
+    private static String airbrakeEndpoint = DEFAULT_AIRBRAKE_ENDPOINT;
+    public static void setAirbrakeEndpoint(String endpoint) {
+        airbrakeEndpoint = endpoint;
+    }
 
     // Exception meta-data
     private static String environmentName = ENVIRONMENT_DEFAULT;
@@ -337,7 +343,7 @@ public class AirbrakeNotifier {
     private static void sendExceptionData(File file) {
         try {
             boolean sent = false;
-            URL url = new URL(AIRBRAKE_ENDPOINT);
+            URL url = new URL(airbrakeEndpoint);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             try {
                 // Set up the connection
